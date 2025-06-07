@@ -32,7 +32,7 @@ const Login = () => {
         backgroundRepeat: "no-repeat",
       }}
     >
-      <Navbar /> {/* ⬅️ Zamiast kopiować top-bar/menu */}
+      <Navbar /> 
       
       <form onSubmit={handleSubmit}>
         <input

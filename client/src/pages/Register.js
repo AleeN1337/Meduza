@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./Auth.css";
-
 import Navbar from "../components/Navbar"; // ⬅️ Komponent nawigacji
 
 const Register = () => {
