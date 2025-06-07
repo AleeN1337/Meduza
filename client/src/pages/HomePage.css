@@ -1,0 +1,155 @@
+.logo {
+  font-size: 1.8rem;
+  font-weight: bold;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6); /* cień logo */
+}
+
+.main-content h2,
+.main-content p {
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6); /* cień dla nagłówka i opisu */
+}
+
+
+
+
+/* Górny pasek */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  position: relative;
+  height: 65px; /* wysokość dopasowana do logo */
+  overflow: hidden; /* uniemożliwia "wychodzenie" */
+}
+
+.logo img {
+  height: 60px;
+  object-fit: contain;
+}
+
+
+.logo {
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.menu-toggle {
+  background: none;
+  color: white;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+/* Panel boczny */
+.side-menu {
+  position: fixed;
+  right: -200px;
+  top: 60px;
+  background-color: rgba(0, 0, 0, 0.8);
+  padding: 1rem;
+  width: 180px;
+  height: auto;
+  transition: right 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  z-index: 3;
+}
+
+.side-menu.open {
+  right: 0;
+}
+
+.side-menu a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/* Główna treść */
+.main-content {
+  text-align: center;
+  color: white;
+  padding: 10vh 2rem;
+  position: relative;
+  z-index: 2;
+}
+
+.main-content h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.main-content p {
+  font-size: 1.2rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.cta-buttons {
+  margin-top: 2rem;
+}
+
+.btn {
+  background: #2d6a4f;
+  color: white;
+  padding: 12px 24px;
+  margin: 0 10px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+
+.btn:hover {
+  background: #40916c;
+}
+
+/* Stopka */
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  padding: 0.5rem;
+  background: rgba(0, 0, 0, 0.5);
+  text-align: center;
+  color: #fff;
+  font-size: 0.9rem;
+  z-index: 2;
+}
+
+/*responsywność*/
+
+@media (max-width: 768px) {
+  .top-bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .main-content h2 {
+    font-size: 2rem;
+  }
+
+  .main-content p {
+    font-size: 1rem;
+  }
+
+  .side-menu {
+    width: 50%;
+    right: -100%;
+  }
+
+  .side-menu.open {
+    right: 0;
+  }
+}
+
+.logo img {
+  height: 40px;
+  object-fit: contain;
+  
+}
