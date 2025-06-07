@@ -17,9 +17,9 @@ const HomePage = () => {
 const sliderSettings = {
   dots: true,
   infinite: true,
-  speed: 1000,
+  speed: 10000,
   autoplay: true,
-  autoplaySpeed: 5000,
+  autoplaySpeed: 50,
   slidesToShow: 3,
   slidesToScroll: 1,
   pauseOnHover: true,
