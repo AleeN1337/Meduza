@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./Auth.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar"; // ⬅️ Dodano import Navbar
 
 const Login = () => {
   const [form, setForm] = useState({ email: "", password: "" });
   const [msg, setMsg] = useState("");
+  const navigate = useNavigate();
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -16,7 +17,8 @@ const Login = () => {
     try {
       const res = await axios.post("http://localhost:5000/api/auth/login", form);
       setMsg(`Witaj, ${res.data.user.firstName}!`);
-      // localStorage.setItem("token", res.data.token);
+      localStorage.setItem("token", res.data.token);
+      navigate("/dashboard");
     } catch (err) {
       setMsg(err.response?.data?.message || "Błąd logowania");
     }

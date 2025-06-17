@@ -3,6 +3,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const authRoutes = require("./routes/authRoutes");
+const dashboardRoutes = require("./routes/dashboardRoutes");
 
 dotenv.config();
 
@@ -14,6 +15,8 @@ app.use(express.json());
 
 // Rejestracja i logowanie
 app.use("/api/auth", authRoutes);
+// Chronione dane użytkownika
+app.use("/api/dashboard", dashboardRoutes);
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
