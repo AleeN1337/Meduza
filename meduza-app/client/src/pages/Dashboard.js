@@ -33,8 +33,11 @@ const Dashboard = () => {
       .get("http://localhost:5000/api/doctors", {
         headers: { Authorization: token },
       })
-      .then((res) => setDoctors(res.data.doctors))
-      .catch((err) => console.error(err));
+      .then((res) => {
+        const fetched = Array.isArray(res.data.doctors) ? res.data.doctors : [];
+        setDoctors(fetched);
+      })
+      .catch((err) => console.error("Błąd pobierania lekarzy:", err));
   };
 
   const handleBook = (doctorId, slotId) => {
@@ -45,7 +48,7 @@ const Dashboard = () => {
         { headers: { Authorization: token } }
       )
       .then(fetchDoctors)
-      .catch((err) => console.error(err));
+      .catch((err) => console.error("Błąd rezerwacji:", err));
   };
 
   const handleCancel = (doctorId, slotId) => {
@@ -56,89 +59,99 @@ const Dashboard = () => {
         { headers: { Authorization: token } }
       )
       .then(fetchDoctors)
-      .catch((err) => console.error(err));
+      .catch((err) => console.error("Błąd anulowania:", err));
   };
 
   if (!user) return <p>Ładowanie...</p>;
 
   const myAppointments = [];
-  doctors.forEach((doc) => {
-    if (Array.isArray(doc.slots)) {
-      doc.slots.forEach((slot) => {
-        if (slot.patient === user._id) {
-          myAppointments.push({
-            doctorId: doc._id,
-            slotId: slot._id,
-            doctor: doc.name,
-            time: slot.time,
-          });
-        }
-      });
-    }
-  });
+
+  if (Array.isArray(doctors)) {
+    doctors.forEach((doc) => {
+      if (Array.isArray(doc.slots)) {
+        doc.slots.forEach((slot) => {
+          if (slot.patient === user._id) {
+            myAppointments.push({
+              doctorId: doc._id,
+              slotId: slot._id,
+              doctor: doc.name,
+              time: slot.time,
+            });
+          }
+        });
+      }
+    });
+  }
 
   return (
-    <div className="pt-20 text-black px-4">
+    <div
+      className="min-h-screen flex flex-col items-center bg-cover bg-center pt-[65px] text-white"
+      style={{
+        backgroundImage: `url(${process.env.PUBLIC_URL + "/meduza-bg.png"})`,
+      }}
+    >
       <Navbar />
-      <h2 className="text-2xl font-bold mb-4">Witaj {user.firstName}</h2>
+      <div className="bg-black/70 p-6 rounded-xl shadow-lg w-full max-w-4xl">
+        <h2 className="text-2xl font-bold mb-4">Witaj {user.firstName}</h2>
 
-      <h3 className="text-xl font-semibold mb-2">Twoje rezerwacje</h3>
-      <ul className="mb-6 space-y-2">
-        {myAppointments.length ? (
-          myAppointments.map((ap) => (
-            <li key={ap.slotId}>
-              {ap.doctor} - {new Date(ap.time).toLocaleString()}
-              <button
-                onClick={() => handleCancel(ap.doctorId, ap.slotId)}
-                className="ml-2 bg-blue-600 text-white px-2 py-1 rounded"
-              >
-                Anuluj
-              </button>
-            </li>
-          ))
-        ) : (
-          <p>Brak rezerwacji.</p>
-        )}
-      </ul>
-
-      <h3 className="text-xl font-semibold mb-2">Dostępni lekarze</h3>
-      {doctors.map((doc) => (
-        <div key={doc._id} className="mb-5">
-          <h4 className="font-semibold">
-            {doc.specialty} {doc.name}
-          </h4>
-          <div className="flex flex-wrap gap-1.5">
-            {Array.isArray(doc.slots) &&
-              doc.slots.map((slot) => (
-                <div
-                  key={slot._id}
-                  className={`p-2 rounded text-sm ${
-                    slot.booked ? "bg-red-100" : "bg-green-100"
-                  }`}
+        <h3 className="text-xl font-semibold mb-2">Twoje rezerwacje</h3>
+        <ul className="mb-6 space-y-2">
+          {myAppointments.length ? (
+            myAppointments.map((ap) => (
+              <li key={ap.slotId}>
+                {ap.doctor} - {new Date(ap.time).toLocaleString()}
+                <button
+                  onClick={() => handleCancel(ap.doctorId, ap.slotId)}
+                  className="ml-2 bg-blue-600 text-white px-2 py-1 rounded"
                 >
-                  {new Date(slot.time).toLocaleString()}
-                  {!slot.booked ? (
-                    <button
-                      onClick={() => handleBook(doc._id, slot._id)}
-                      className="ml-2 bg-blue-600 text-white px-2 py-1 rounded"
-                    >
-                      Rezerwuj
-                    </button>
-                  ) : slot.patient === user._id ? (
-                    <button
-                      onClick={() => handleCancel(doc._id, slot._id)}
-                      className="ml-2 bg-blue-600 text-white px-2 py-1 rounded"
-                    >
-                      Anuluj
-                    </button>
-                  ) : (
-                    <span className="ml-2 text-gray-600">Zajęte</span>
-                  )}
-                </div>
-              ))}
+                  Anuluj
+                </button>
+              </li>
+            ))
+          ) : (
+            <p>Brak rezerwacji.</p>
+          )}
+        </ul>
+
+        <h3 className="text-xl font-semibold mb-2">Dostępni lekarze</h3>
+        {doctors.map((doc) => (
+          <div key={doc._id} className="mb-5">
+            <h4 className="font-semibold">
+              {doc.specialty} {doc.name}
+            </h4>
+            <div className="flex flex-wrap gap-1.5">
+              {Array.isArray(doc.slots) &&
+                doc.slots.map((slot) => (
+                  <div
+                    key={slot._id}
+                    className={`p-2 rounded text-sm ${
+                      slot.booked ? "bg-red-100" : "bg-green-100"
+                    }`}
+                  >
+                    {new Date(slot.time).toLocaleString()}
+                    {!slot.booked ? (
+                      <button
+                        onClick={() => handleBook(doc._id, slot._id)}
+                        className="ml-2 bg-blue-600 text-white px-2 py-1 rounded"
+                      >
+                        Rezerwuj
+                      </button>
+                    ) : slot.patient === user._id ? (
+                      <button
+                        onClick={() => handleCancel(doc._id, slot._id)}
+                        className="ml-2 bg-blue-600 text-white px-2 py-1 rounded"
+                      >
+                        Anuluj
+                      </button>
+                    ) : (
+                      <span className="ml-2 text-gray-300">Zajęte</span>
+                    )}
+                  </div>
+                ))}
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 };

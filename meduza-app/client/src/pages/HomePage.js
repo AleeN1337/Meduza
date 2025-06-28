@@ -22,7 +22,7 @@ const testimonials = [
 
 const HomePage = () => {
   return (
-    <div className="relative min-h-screen flex flex-col items-center text-white">
+    <div className="relative min-h-screen flex flex-col items-center text-white pt-[65px]">
       {/* Tło */}
       <div
         className="absolute inset-0 -z-10 bg-cover bg-center bg-no-repeat"

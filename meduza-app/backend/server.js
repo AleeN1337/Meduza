@@ -1,14 +1,14 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const path = require("path");
 const dotenv = require("dotenv");
 const authRoutes = require("./routes/authRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
 const doctorRoutes = require("./routes/doctorRoutes");
 const Doctor = require("./models/Doctor");
 
-dotenv.config();
-
+dotenv.config({ path: path.join(__dirname, ".env") });
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -47,7 +47,6 @@ mongoose
           ],
         },
       ]);
-      console.log("📄 Dodano przykładowych lekarzy");
     }
     app.listen(PORT, () => console.log(`🚀 Serwer działa na porcie ${PORT}`));
   })

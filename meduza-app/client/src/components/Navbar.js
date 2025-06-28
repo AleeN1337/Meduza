@@ -6,7 +6,7 @@ const Navbar = () => {
   const isLoggedIn = !!localStorage.getItem("token");
 
   return (
-    <div className="flex items-center justify-between px-6 py-3 bg-black/60 text-white relative h-[65px] z-10 w-full">
+    <div className="fixed top-0 left-0 flex items-center justify-between px-6 py-3 bg-black/60 text-white h-[65px] z-10 w-full">
       <div className="flex-shrink-0">
         <Link to="/">
           <img

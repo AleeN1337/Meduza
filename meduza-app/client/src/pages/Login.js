@@ -29,7 +29,7 @@ const Login = () => {
 
   return (
     <div
-      className="min-h-screen flex flex-col items-center justify-center bg-cover bg-center"
+      className="min-h-screen flex flex-col items-center justify-center bg-cover bg-center pt-[65px]"
       style={{
         backgroundImage: `url(${process.env.PUBLIC_URL + "/meduza-bg.png"})`,
       }}
@@ -66,7 +66,7 @@ const Login = () => {
 
       {msg && <p className="mt-4 text-white">{msg}</p>}
 
-      <footer className="w-full text-center py-2 bg-black/50 text-white mt-4">
+      <footer className="w-full text-center text-white py-2 bg-black/50 text-sm mt-auto">
         © 2025 MEDuza. Wszystkie prawa zastrzeżone.
       </footer>
     </div>
