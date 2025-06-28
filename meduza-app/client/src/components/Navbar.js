@@ -1,9 +1,16 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const isLoggedIn = !!localStorage.getItem("token");
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setMenuOpen(false);
+    navigate("/");
+  };
 
   return (
     <div className="fixed top-0 left-0 flex items-center justify-between px-6 py-3 bg-black/60 text-white h-[65px] z-10 w-full">
@@ -20,16 +27,16 @@ const Navbar = () => {
       <nav className="hidden md:flex gap-6 ml-auto">
         {isLoggedIn ? (
           <>
+            <Link to="/calendar" className="text-white font-bold">
+              Kalendarz
+            </Link>
             <Link to="/dashboard" className="text-white font-bold">
               Panel
             </Link>
-            <Link
-              to="/"
-              className="text-white font-bold"
-              onClick={() => localStorage.removeItem("token")}
-            >
+
+            <button onClick={handleLogout} className="text-white font-bold">
               Wyloguj
-            </Link>
+            </button>
           </>
         ) : (
           <>
@@ -58,22 +65,25 @@ const Navbar = () => {
         {isLoggedIn ? (
           <>
             <Link
+              to="/calendar"
+              className="text-white font-bold"
+              onClick={() => setMenuOpen(false)}
+            >
+              Kalendarz
+            </Link>
+            <Link
               to="/dashboard"
               className="text-white font-bold"
               onClick={() => setMenuOpen(false)}
             >
-              Zaloguj
+              Wyloguj Panel
             </Link>
-            <Link
-              to="/"
-              className="text-white font-bold"
-              onClick={() => {
-                localStorage.removeItem("token");
-                setMenuOpen(false);
-              }}
+            <button
+              onClick={handleLogout}
+              className="text-white font-bold text-left"
             >
               Wyloguj
-            </Link>
+            </button>
           </>
         ) : (
           <>

@@ -5,7 +5,7 @@ import Navbar from "../components/Navbar";
 
 const Dashboard = () => {
   const [user, setUser] = useState(null);
-  const [doctors, setDoctors] = useState([]);
+  const [appointments, setAppointments] = useState([]);
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
@@ -25,30 +25,19 @@ const Dashboard = () => {
         navigate("/login");
       });
 
-    fetchDoctors();
+    fetchAppointments();
   }, []);
 
-  const fetchDoctors = () => {
+  const fetchAppointments = () => {
     axios
-      .get("http://localhost:5000/api/doctors", {
+      .get("http://localhost:5000/api/doctors/my", {
         headers: { Authorization: token },
       })
       .then((res) => {
-        const fetched = Array.isArray(res.data.doctors) ? res.data.doctors : [];
-        setDoctors(fetched);
+        const fetched = Array.isArray(res.data) ? res.data : [];
+        setAppointments(fetched);
       })
-      .catch((err) => console.error("Błąd pobierania lekarzy:", err));
-  };
-
-  const handleBook = (doctorId, slotId) => {
-    axios
-      .post(
-        `http://localhost:5000/api/doctors/${doctorId}/book`,
-        { slotId },
-        { headers: { Authorization: token } }
-      )
-      .then(fetchDoctors)
-      .catch((err) => console.error("Błąd rezerwacji:", err));
+      .catch((err) => console.error("Błąd pobierania wizyt:", err));
   };
 
   const handleCancel = (doctorId, slotId) => {
@@ -58,30 +47,11 @@ const Dashboard = () => {
         { slotId },
         { headers: { Authorization: token } }
       )
-      .then(fetchDoctors)
+      .then(fetchAppointments)
       .catch((err) => console.error("Błąd anulowania:", err));
   };
 
   if (!user) return <p>Ładowanie...</p>;
-
-  const myAppointments = [];
-
-  if (Array.isArray(doctors)) {
-    doctors.forEach((doc) => {
-      if (Array.isArray(doc.slots)) {
-        doc.slots.forEach((slot) => {
-          if (slot.patient === user._id) {
-            myAppointments.push({
-              doctorId: doc._id,
-              slotId: slot._id,
-              doctor: doc.name,
-              time: slot.time,
-            });
-          }
-        });
-      }
-    });
-  }
 
   return (
     <div
@@ -94,12 +64,13 @@ const Dashboard = () => {
       <div className="bg-black/70 p-6 rounded-xl shadow-lg w-full max-w-4xl">
         <h2 className="text-2xl font-bold mb-4">Witaj {user.firstName}</h2>
 
-        <h3 className="text-xl font-semibold mb-2">Twoje rezerwacje</h3>
+        <h3 className="text-xl font-semibold mb-2">Zaplanowane wizyty</h3>
         <ul className="mb-6 space-y-2">
-          {myAppointments.length ? (
-            myAppointments.map((ap) => (
+          {appointments.length ? (
+            appointments.map((ap) => (
               <li key={ap.slotId}>
-                {ap.doctor} - {new Date(ap.time).toLocaleString()}
+                {ap.doctorName} ({ap.specialty}) -{" "}
+                {new Date(ap.time).toLocaleString()}
                 <button
                   onClick={() => handleCancel(ap.doctorId, ap.slotId)}
                   className="ml-2 bg-blue-600 text-white px-2 py-1 rounded"
@@ -109,48 +80,11 @@ const Dashboard = () => {
               </li>
             ))
           ) : (
-            <p>Brak rezerwacji.</p>
+            <p>Brak wizyt.</p>
           )}
         </ul>
-
-        <h3 className="text-xl font-semibold mb-2">Dostępni lekarze</h3>
-        {doctors.map((doc) => (
-          <div key={doc._id} className="mb-5">
-            <h4 className="font-semibold">
-              {doc.specialty} {doc.name}
-            </h4>
-            <div className="flex flex-wrap gap-1.5">
-              {Array.isArray(doc.slots) &&
-                doc.slots.map((slot) => (
-                  <div
-                    key={slot._id}
-                    className={`p-2 rounded text-sm ${
-                      slot.booked ? "bg-red-100" : "bg-green-100"
-                    }`}
-                  >
-                    {new Date(slot.time).toLocaleString()}
-                    {!slot.booked ? (
-                      <button
-                        onClick={() => handleBook(doc._id, slot._id)}
-                        className="ml-2 bg-blue-600 text-white px-2 py-1 rounded"
-                      >
-                        Rezerwuj
-                      </button>
-                    ) : slot.patient === user._id ? (
-                      <button
-                        onClick={() => handleCancel(doc._id, slot._id)}
-                        className="ml-2 bg-blue-600 text-white px-2 py-1 rounded"
-                      >
-                        Anuluj
-                      </button>
-                    ) : (
-                      <span className="ml-2 text-gray-300">Zajęte</span>
-                    )}
-                  </div>
-                ))}
-            </div>
-          </div>
-        ))}
+        <h3 className="text-xl font-semibold mb-2">Twoje recepty</h3>
+        <p>Brak wystawionych recept.</p>
       </div>
     </div>
   );
