@@ -7,6 +7,11 @@ const slotSchema = new mongoose.Schema({
   confirmed: { type: Boolean, default: false },
   patient: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
 });
+const notificationSchema = new mongoose.Schema({
+  message: String,
+  date: { type: Date, default: Date.now },
+  read: { type: Boolean, default: false },
+});
 
 const doctorSchema = new mongoose.Schema({
   name: { type: String, required: true },
@@ -16,6 +21,9 @@ const doctorSchema = new mongoose.Schema({
   password: { type: String, required: true },
   mustChangePassword: { type: Boolean, default: false },
   specialty: { type: String },
+  visible: { type: Boolean, default: false },
+  tempPassword: { type: String },
+  notifications: [notificationSchema],
   slots: [slotSchema],
 });
 

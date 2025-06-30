@@ -26,14 +26,24 @@ router.post("/", auth, async (req, res) => {
     pwz,
     password,
     mustChangePassword: true,
+    visible: true,
+    tempPassword: plainPassword,
   });
   await doctor.save();
   res.json({ message: "Lekarz dodany", username, password: plainPassword });
 });
 
+// pełna lista lekarzy dla admina
+router.get("/admin", auth, async (req, res) => {
+  if (req.user.role !== "admin")
+    return res.status(403).json({ message: "Brak uprawnień" });
+  const doctors = await Doctor.find();
+  res.json(doctors);
+});
+
 // zwróć wszystkich lekarzy z terminami
 router.get("/", auth, async (req, res) => {
-  const doctors = await Doctor.find();
+  const doctors = await Doctor.find({ visible: true });
   res.json(doctors);
 });
 
@@ -69,8 +79,46 @@ router.post("/:id/book", auth, async (req, res) => {
   slot.booked = true;
   slot.confirmed = false;
   slot.patient = req.user.id;
+  const patient = await User.findById(req.user.id);
+  doctor.notifications.push({
+    message: `Nowa rezerwacja od ${patient.firstName} ${patient.lastName}`,
+  });
   await doctor.save();
   res.json({ message: "Zarezerwowano termin" });
+});
+// edycja terminu
+router.put("/me/slots/:slotId", auth, async (req, res) => {
+  if (req.user.role !== "doctor")
+    return res.status(403).json({ message: "Brak uprawnień" });
+  const doctor = await Doctor.findById(req.user.id);
+  if (!doctor) return res.status(404).json({ message: "Lekarz nie istnieje" });
+  const slot = doctor.slots.id(req.params.slotId);
+  if (!slot) return res.status(404).json({ message: "Termin nie istnieje" });
+  if (slot.booked)
+    return res
+      .status(400)
+      .json({ message: "Nie można edytować zajętego terminu" });
+  if (req.body.time) slot.time = req.body.time;
+  if (req.body.location) slot.location = req.body.location;
+  await doctor.save();
+  res.json({ message: "Zaktualizowano termin" });
+});
+
+// usunięcie terminu
+router.delete("/me/slots/:slotId", auth, async (req, res) => {
+  if (req.user.role !== "doctor")
+    return res.status(403).json({ message: "Brak uprawnień" });
+  const doctor = await Doctor.findById(req.user.id);
+  if (!doctor) return res.status(404).json({ message: "Lekarz nie istnieje" });
+  const slot = doctor.slots.id(req.params.slotId);
+  if (!slot) return res.status(404).json({ message: "Termin nie istnieje" });
+  if (slot.booked)
+    return res
+      .status(400)
+      .json({ message: "Nie można usunąć zajętego terminu" });
+  slot.remove();
+  await doctor.save();
+  res.json({ message: "Usunięto termin" });
 });
 
 // anulowanie wizyty

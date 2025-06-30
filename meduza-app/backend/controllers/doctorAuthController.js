@@ -40,6 +40,7 @@ const changePassword = async (req, res) => {
       return res.status(401).json({ message: "Nieprawidłowe obecne hasło." });
     doctor.password = await bcrypt.hash(newPassword, 10);
     doctor.mustChangePassword = false;
+    doctor.tempaPassword = null;
     await doctor.save();
     res.json({ message: "Hasło zmienione" });
   } catch (err) {

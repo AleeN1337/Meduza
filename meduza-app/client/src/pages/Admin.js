@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 import { useNavigate } from "react-router-dom";
@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 const Admin = () => {
   const navigate = useNavigate();
   const [token, setToken] = useState(localStorage.getItem("adminToken"));
+  const [doctors, setDoctors] = useState([]);
   const [loginForm, setLoginForm] = useState({ email: "", password: "" });
   const [doctorForm, setDoctorForm] = useState({
     name: "",
@@ -17,6 +18,16 @@ const Admin = () => {
 
   const handleLoginChange = (e) =>
     setLoginForm({ ...loginForm, [e.target.name]: e.target.value });
+
+  useEffect(() => {
+    if (!token) return;
+    axios
+      .get("http://localhost:5000/api/doctors/admin", {
+        headers: { Authorization: token },
+      })
+      .then((res) => setDoctors(res.data))
+      .catch(() => setDoctors([]));
+  }, [token]);
 
   const handleDoctorChange = (e) =>
     setDoctorForm({ ...doctorForm, [e.target.name]: e.target.value });
@@ -52,6 +63,10 @@ const Admin = () => {
         `Dodano lekarza. Login: ${res.data.username} Hasło: ${res.data.password}`
       );
       setDoctorForm({ name: "", email: "", specialty: "", pwz: "" });
+      const list = await axios.get("http://localhost:5000/api/doctors/admin", {
+        headers: { Authorization: token },
+      });
+      setDoctors(list.data);
     } catch (err) {
       setMsg(err.response?.data?.message || "Błąd dodawania lekarza");
     }
@@ -151,6 +166,7 @@ const Admin = () => {
             onChange={handleDoctorChange}
             className="p-2 rounded w-full"
           />
+
           <button
             type="submit"
             className="bg-primary hover:bg-primary-light p-3 rounded font-bold text-white"
@@ -158,6 +174,14 @@ const Admin = () => {
             Dodaj lekarza
           </button>
         </form>
+        <h3 className="text-xl font-semibold mt-4">Lista lekarzy</h3>
+        <ul className="mb-4">
+          {doctors.map((d) => (
+            <li key={d._id} className="text-sm">
+              {d.name} ({d.username}) - pierwsze hasło: {d.tempPassword || "-"}
+            </li>
+          ))}
+        </ul>
         <button
           onClick={logout}
           className="mt-4 bg-red-600 px-4 py-2 rounded text-white"

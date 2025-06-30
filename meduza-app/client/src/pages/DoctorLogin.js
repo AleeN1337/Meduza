@@ -20,6 +20,7 @@ const DoctorLogin = () => {
       );
       setMsg(`Witaj, ${res.data.doctor.name}!`);
       localStorage.setItem("doctorToken", res.data.token);
+      localStorage.removeItem("adminToken");
       if (res.data.mustChangePassword) {
         navigate("/doctor-change-password");
       } else {

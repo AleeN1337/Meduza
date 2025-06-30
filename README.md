@@ -4,6 +4,7 @@
 - Node.js
 - Express
 - MongoDB
+- Tailwind css
 
 ## Autorzy
 

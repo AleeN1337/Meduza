@@ -23,7 +23,8 @@ const DoctorDashboard = () => {
         localStorage.removeItem("doctorToken");
         navigate("/doctor-login");
       });
-  }, []);
+  }, [navigate, token]);
+
   const confirmVisit = async (slotId) => {
     try {
       await axios.post(
@@ -40,6 +41,28 @@ const DoctorDashboard = () => {
       setDoctor(res.data.doctor);
     } catch {}
   };
+  const updateSlot = async (slotId, data) => {
+    await axios.put(
+      `http://localhost:5000/api/doctors/me/slots/${slotId}`,
+      data,
+      { headers: { Authorization: token } }
+    );
+    const res = await axios.get("http://localhost:5000/api/doctor-dashboard", {
+      headers: { Authorization: token },
+    });
+    setDoctor(res.data.doctor);
+  };
+
+  const deleteSlot = async (slotId) => {
+    await axios.delete(`http://localhost:5000/api/doctors/me/slots/${slotId}`, {
+      headers: { Authorization: token },
+    });
+    const res = await axios.get("http://localhost:5000/api/doctor-dashboard", {
+      headers: { Authorization: token },
+    });
+    setDoctor(res.data.doctor);
+  };
+
   const addSlot = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
@@ -96,6 +119,35 @@ const DoctorDashboard = () => {
               </li>
             ))}
         </ul>
+        <h3 className="text-xl font-semibold mb-2">Wolne terminy</h3>
+        <ul className="mb-4">
+          {doctor.slots
+            .filter((s) => !s.booked)
+            .map((slot) => (
+              <li key={slot._id} className="mb-2 flex gap-2 items-center">
+                <span>
+                  {new Date(slot.time).toLocaleString()} - {slot.location}
+                </span>
+                <button
+                  onClick={() =>
+                    updateSlot(slot._id, {
+                      time: prompt("Nowy czas", slot.time),
+                      location: prompt("Miejsce", slot.location),
+                    })
+                  }
+                  className="bg-blue-600 px-2 py-1 rounded"
+                >
+                  Edytuj
+                </button>
+                <button
+                  onClick={() => deleteSlot(slot._id)}
+                  className="bg-red-600 px-2 py-1 rounded"
+                >
+                  Usuń
+                </button>
+              </li>
+            ))}
+        </ul>
         <h3 className="text-xl font-semibold mb-2">Potwierdzone wizyty</h3>
         <ul>
           {doctor.slots
@@ -128,6 +180,16 @@ const DoctorDashboard = () => {
             Dodaj
           </button>
         </form>
+        {doctor.notifications.length > 0 && (
+          <div className="mt-4">
+            <h3 className="text-xl font-semibold mb-2">Powiadomienia</h3>
+            <ul>
+              {doctor.notifications.map((n) => (
+                <li key={n._id}>{n.message}</li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     </div>
   );

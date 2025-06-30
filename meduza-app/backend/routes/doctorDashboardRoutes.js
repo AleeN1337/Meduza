@@ -8,10 +8,9 @@ router.get("/", auth, async (req, res) => {
     return res.status(403).json({ message: "Brak uprawnień" });
   }
   try {
-    const doctor = await Doctor.findById(req.user.id).populate(
-      "slots.patient",
-      "firstName lastName email"
-    );
+    const doctor = await Doctor.findById(req.user.id)
+      .populate("slots.patient", "firstName lastName email")
+      .select("-password");
     if (!doctor)
       return res.status(404).json({ message: "Lekarz nie istnieje." });
     res.json({ doctor });

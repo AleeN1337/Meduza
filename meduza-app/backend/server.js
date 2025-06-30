@@ -55,6 +55,8 @@ mongoose
           password,
           specialty: doc.specialty,
           mustChangePassword: true,
+          visible: true,
+          tempPassword: plain,
           slots: [
             { time: new Date(Date.now() + 86400000), location: "Gabinet 1" },
             {
