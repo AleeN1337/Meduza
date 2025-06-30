@@ -4,12 +4,16 @@ import { Link, useNavigate } from "react-router-dom";
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const isLoggedIn =
-    !!localStorage.getItem("token") || !!localStorage.getItem("doctorToken");
+    !!localStorage.getItem("token") ||
+    !!localStorage.getItem("doctorToken") ||
+    !!localStorage.getItem("adminToken");
+  const isAdmin = !!localStorage.getItem("adminToken");
   const navigate = useNavigate();
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("doctorToken");
+    localStorage.removeItem("adminToken");
     setMenuOpen(false);
     navigate("/");
   };
@@ -29,12 +33,20 @@ const Navbar = () => {
       <nav className="hidden md:flex gap-6 ml-auto">
         {isLoggedIn ? (
           <>
-            <Link to="/calendar" className="text-white font-bold">
-              Kalendarz
-            </Link>
-            <Link to="/dashboard" className="text-white font-bold">
-              Panel
-            </Link>
+            {isAdmin ? (
+              <Link to="/admin" className="text-white font-bold">
+                Panel admina
+              </Link>
+            ) : (
+              <>
+                <Link to="/calendar" className="text-white font-bold">
+                  Kalendarz
+                </Link>
+                <Link to="/dashboard" className="text-white font-bold">
+                  Panel
+                </Link>
+              </>
+            )}
 
             <button onClick={handleLogout} className="text-white font-bold">
               Wyloguj
@@ -66,26 +78,38 @@ const Navbar = () => {
       >
         {isLoggedIn ? (
           <>
-            <Link to="/dashboard" className="text-white font-bold">
-              Panel
-            </Link>
-            <Link to="/visits" className="text-white font-bold">
-              Wizyty
-            </Link>
-            <Link
-              to="/calendar"
-              className="text-white font-bold"
-              onClick={() => setMenuOpen(false)}
-            >
-              Kalendarz
-            </Link>
-            <Link
-              to="/messages"
-              className="text-white font-bold"
-              onClick={() => setMenuOpen(false)}
-            >
-              Wiadomości
-            </Link>
+            {isAdmin ? (
+              <Link
+                to="/admin"
+                className="text-white font-bold"
+                onClick={() => setMenuOpen(false)}
+              >
+                Panel admina
+              </Link>
+            ) : (
+              <>
+                <Link to="/dashboard" className="text-white font-bold">
+                  Panel
+                </Link>
+                <Link to="/visits" className="text-white font-bold">
+                  Wizyty
+                </Link>
+                <Link
+                  to="/calendar"
+                  className="text-white font-bold"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Kalendarz
+                </Link>
+                <Link
+                  to="/messages"
+                  className="text-white font-bold"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Wiadomości
+                </Link>
+              </>
+            )}
             <button
               onClick={handleLogout}
               className="text-white font-bold text-left"

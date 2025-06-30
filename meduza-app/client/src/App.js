@@ -10,6 +10,7 @@ import Visits from "./pages/Visits";
 import History from "./pages/History";
 import Prescriptions from "./pages/Prescriptions";
 import Messages from "./pages/Messages";
+import Admin from "./pages/Admin";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path="/history" element={<History />} />
         <Route path="/prescriptions" element={<Prescriptions />} />
         <Route path="/messages" element={<Messages />} />
+        <Route path="/admin" element={<Admin />} />
       </Routes>
     </Router>
   );

@@ -58,6 +58,12 @@ const HomePage = () => {
         >
           Logowanie lekarza
         </Link>
+        <Link
+          to="/admin"
+          className="bg-primary hover:bg-primary-light px-6 py-3 rounded font-bold"
+        >
+          Logowanie admina
+        </Link>
       </div>
       {/* Sekcja opinii */}
       <div className="max-w-4xl mx-auto w-full px-4 ">
