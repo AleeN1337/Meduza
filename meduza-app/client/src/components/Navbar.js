@@ -64,6 +64,12 @@ const Navbar = () => {
       >
         {isLoggedIn ? (
           <>
+            <Link to="/dashboard" className="text-white font-bold">
+              Panel
+            </Link>
+            <Link to="/visits" className="text-white font-bold">
+              Wizyty
+            </Link>
             <Link
               to="/calendar"
               className="text-white font-bold"
@@ -72,21 +78,38 @@ const Navbar = () => {
               Kalendarz
             </Link>
             <Link
-              to="/dashboard"
+              to="/messages"
               className="text-white font-bold"
               onClick={() => setMenuOpen(false)}
             >
-              Wyloguj Panel
+              Wiadomości
             </Link>
             <button
               onClick={handleLogout}
               className="text-white font-bold text-left"
             >
+              <Link to="/messages" className="text-white font-bold">
+                Wiadomości
+              </Link>
               Wyloguj
             </button>
           </>
         ) : (
           <>
+            <Link
+              to="/dashboard"
+              className="text-white font-bold"
+              onClick={() => setMenuOpen(false)}
+            >
+              Panel
+            </Link>
+            <Link
+              to="/visits"
+              className="text-white font-bold"
+              onClick={() => setMenuOpen(false)}
+            >
+              Wizyty
+            </Link>
             <Link
               to="/register"
               className="text-white font-bold"

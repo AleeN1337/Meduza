@@ -39,17 +39,9 @@ const Dashboard = () => {
       })
       .catch((err) => console.error("Błąd pobierania wizyt:", err));
   };
-
-  const handleCancel = (doctorId, slotId) => {
-    axios
-      .post(
-        `http://localhost:5000/api/doctors/${doctorId}/cancel`,
-        { slotId },
-        { headers: { Authorization: token } }
-      )
-      .then(fetchAppointments)
-      .catch((err) => console.error("Błąd anulowania:", err));
-  };
+  const nextAppointment = appointments
+    .slice()
+    .sort((a, b) => new Date(a.time) - new Date(b.time))[0];
 
   if (!user) return <p>Ładowanie...</p>;
 
@@ -63,28 +55,39 @@ const Dashboard = () => {
       <Navbar />
       <div className="bg-black/70 p-6 rounded-xl shadow-lg w-full max-w-4xl">
         <h2 className="text-2xl font-bold mb-4">Witaj {user.firstName}</h2>
-
-        <h3 className="text-xl font-semibold mb-2">Zaplanowane wizyty</h3>
-        <ul className="mb-6 space-y-2">
-          {appointments.length ? (
-            appointments.map((ap) => (
-              <li key={ap.slotId}>
-                {ap.doctorName} ({ap.specialty}) -{" "}
-                {new Date(ap.time).toLocaleString()}
-                <button
-                  onClick={() => handleCancel(ap.doctorId, ap.slotId)}
-                  className="ml-2 bg-blue-600 text-white px-2 py-1 rounded"
-                >
-                  Anuluj
-                </button>
-              </li>
-            ))
-          ) : (
-            <p>Brak wizyt.</p>
-          )}
-        </ul>
-        <h3 className="text-xl font-semibold mb-2">Twoje recepty</h3>
-        <p>Brak wystawionych recept.</p>
+        <h3 className="text-xl font-semibold mb-2">
+          Najbliższa zaplanowana wizyta
+        </h3>
+        {nextAppointment ? (
+          <p className="mb-4">
+            {nextAppointment.doctorName} ({nextAppointment.specialty}) -{" "}
+            {new Date(nextAppointment.time).toLocaleString()}
+          </p>
+        ) : (
+          <p className="mb-4">Brak zaplanowanych wizyt.</p>
+        )}
+        <h3 className="text-xl font-semibold mb-2">Status ostatnich wyników</h3>
+        <p className="mb-4">Brak nowych wyników badań.</p>
+        <div className="flex gap-4">
+          <button
+            onClick={() => navigate("/calendar")}
+            className="bg-primary px-4 py-2 rounded"
+          >
+            Umów wizytę
+          </button>
+          <button
+            onClick={() => navigate("/visits")}
+            className="bg-primary px-4 py-2 rounded"
+          >
+            Historia wizyt
+          </button>
+          <button
+            onClick={() => navigate("/messages")}
+            className="bg-primary px-4 py-2 rounded"
+          >
+            Wiadomości
+          </button>
+        </div>
       </div>
     </div>
   );

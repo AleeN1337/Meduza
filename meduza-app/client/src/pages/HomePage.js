@@ -41,7 +41,7 @@ const HomePage = () => {
       <img
         src="/Logo_MEDuza.png"
         alt="MEDuza logo"
-        className="h-40 w-auto mb-8 drop-shadow-xl"
+        className="h-40 w-auto mb-8 drop-shadow-x5"
       />
 
       {/* Przyciski */}
