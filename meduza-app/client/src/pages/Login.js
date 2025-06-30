@@ -21,7 +21,7 @@ const Login = () => {
       );
       setMsg(`Witaj, ${res.data.user.firstName}!`);
       localStorage.setItem("token", res.data.token);
-      navigate("/calendar");
+      navigate("/dashboard");
     } catch (err) {
       setMsg(err.response?.data?.message || "Błąd logowania");
     }
