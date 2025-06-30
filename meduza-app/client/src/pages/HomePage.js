@@ -50,13 +50,13 @@ const HomePage = () => {
           to="/login"
           className="bg-primary hover:bg-primary-light px-6 py-3 rounded font-bold"
         >
-          Logowanie
+          Logowanie pacjenta
         </Link>
         <Link
-          to="/register"
+          to="/doctor-login"
           className="bg-primary hover:bg-primary-light px-6 py-3 rounded font-bold"
         >
-          Rejestracja
+          Logowanie lekarza
         </Link>
       </div>
       {/* Sekcja opinii */}

@@ -3,6 +3,8 @@ import HomePage from "./pages/HomePage";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
+import DoctorLogin from "./pages/DoctorLogin";
+import DoctorDashboard from "./pages/DoctorDashboard";
 import Calendar from "./pages/Calendar";
 import Visits from "./pages/Visits";
 import History from "./pages/History";
@@ -16,6 +18,8 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/doctor-login" element={<DoctorLogin />} />
+        <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
         <Route path="/calendar" element={<Calendar />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/visits" element={<Visits />} />

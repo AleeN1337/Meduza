@@ -3,7 +3,8 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const registerUser = async (req, res) => {
-  const { firstName, lastName, email, password, phone, country, city } = req.body;
+  const { firstName, lastName, email, password, phone, country, city } =
+    req.body;
 
   if (!firstName || !lastName || !email || !password) {
     return res.status(400).json({ message: "Proszę uzupełnić wymagane pola." });
@@ -11,7 +12,8 @@ const registerUser = async (req, res) => {
 
   try {
     const existingUser = await User.findOne({ email });
-    if (existingUser) return res.status(409).json({ message: "Użytkownik już istnieje." });
+    if (existingUser)
+      return res.status(409).json({ message: "Użytkownik już istnieje." });
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -23,7 +25,7 @@ const registerUser = async (req, res) => {
       phone,
       country,
       city,
-      role: "patient" // zawsze pacjent
+      role: "patient", // zawsze pacjent
     });
 
     await newUser.save();
@@ -38,12 +40,18 @@ const loginUser = async (req, res) => {
 
   try {
     const user = await User.findOne({ email });
-    if (!user) return res.status(404).json({ message: "Użytkownik nie istnieje." });
+    if (!user)
+      return res.status(404).json({ message: "Użytkownik nie istnieje." });
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) return res.status(401).json({ message: "Nieprawidłowe hasło." });
+    if (!isPasswordValid)
+      return res.status(401).json({ message: "Nieprawidłowe hasło." });
 
-    const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "2h" });
+    const token = jwt.sign(
+      { id: user._id, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "2h" }
+    );
 
     res.status(200).json({ message: "Zalogowano pomyślnie.", token, user });
   } catch (error) {

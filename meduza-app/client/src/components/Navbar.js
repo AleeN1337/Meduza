@@ -3,11 +3,13 @@ import { Link, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const isLoggedIn = !!localStorage.getItem("token");
+  const isLoggedIn =
+    !!localStorage.getItem("token") || !!localStorage.getItem("doctorToken");
   const navigate = useNavigate();
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("doctorToken");
     setMenuOpen(false);
     navigate("/");
   };
