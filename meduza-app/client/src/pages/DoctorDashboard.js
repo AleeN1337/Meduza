@@ -40,6 +40,27 @@ const DoctorDashboard = () => {
       setDoctor(res.data.doctor);
     } catch {}
   };
+  const addSlot = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const time = formData.get("time");
+    const location = formData.get("location");
+    try {
+      await axios.post(
+        "http://localhost:5000/api/doctors/me/slots",
+        { time, location },
+        { headers: { Authorization: token } }
+      );
+      const res = await axios.get(
+        "http://localhost:5000/api/doctor-dashboard",
+        {
+          headers: { Authorization: token },
+        }
+      );
+      setDoctor(res.data.doctor);
+      e.target.reset();
+    } catch {}
+  };
 
   if (!doctor) return <p>Ładowanie...</p>;
 
@@ -86,6 +107,27 @@ const DoctorDashboard = () => {
               </li>
             ))}
         </ul>
+        <h3 className="text-xl font-semibold mt-4 mb-2">Dodaj termin</h3>
+        <form onSubmit={addSlot} className="flex flex-col gap-2 text-black">
+          <input
+            type="datetime-local"
+            name="time"
+            required
+            className="p-2 rounded"
+          />
+          <input
+            type="text"
+            name="location"
+            placeholder="Miejsce"
+            className="p-2 rounded"
+          />
+          <button
+            type="submit"
+            className="bg-primary px-4 py-2 rounded text-white"
+          >
+            Dodaj
+          </button>
+        </form>
       </div>
     </div>
   );

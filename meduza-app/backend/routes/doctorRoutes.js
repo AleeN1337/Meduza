@@ -25,6 +25,7 @@ router.post("/", auth, async (req, res) => {
     specialty,
     pwz,
     password,
+    mustChangePassword: true,
   });
   await doctor.save();
   res.json({ message: "Lekarz dodany", username, password: plainPassword });
@@ -87,6 +88,31 @@ router.post("/:id/cancel", auth, async (req, res) => {
   slot.patient = null;
   await doctor.save();
   res.json({ message: "Anulowano wizytę" });
+});
+// dodanie nowego terminu przez lekarza
+router.post("/me/slots", auth, async (req, res) => {
+  if (req.user.role !== "doctor")
+    return res.status(403).json({ message: "Brak uprawnień" });
+  const { time, location } = req.body;
+  const doctor = await Doctor.findById(req.user.id);
+  if (!doctor) return res.status(404).json({ message: "Lekarz nie istnieje" });
+  doctor.slots.push({ time, location });
+  await doctor.save();
+  res.json({ message: "Dodano termin" });
+});
+// aktualizacja danych lekarza
+router.put("/me", auth, async (req, res) => {
+  if (req.user.role !== "doctor")
+    return res.status(403).json({ message: "Brak uprawnień" });
+  const allowed = ["email", "specialty", "pwz"];
+  const update = {};
+  allowed.forEach((f) => {
+    if (req.body[f] !== undefined) update[f] = req.body[f];
+  });
+  const doctor = await Doctor.findByIdAndUpdate(req.user.id, update, {
+    new: true,
+  }).select("-password");
+  res.json({ doctor });
 });
 // potwierdzenie wizyty przez lekarza
 router.post("/:id/confirm", auth, async (req, res) => {

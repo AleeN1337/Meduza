@@ -9,6 +9,7 @@ const dashboardRoutes = require("./routes/dashboardRoutes");
 const doctorRoutes = require("./routes/doctorRoutes");
 const doctorAuthRoutes = require("./routes/doctorAuthRoutes");
 const doctorDashboardRoutes = require("./routes/doctorDashboardRoutes");
+const userRoutes = require("./routes/userRoutes");
 const Doctor = require("./models/Doctor");
 const User = require("./models/User");
 
@@ -29,6 +30,8 @@ app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/doctor-dashboard", doctorDashboardRoutes);
 // Operacje na lekarzach i wizytach
 app.use("/api/doctors", doctorRoutes);
+// Dane i aktualizacja pacjenta
+app.use("/api/users", userRoutes);
 
 mongoose
   .connect(process.env.MONGO_URI)
@@ -51,9 +54,13 @@ mongoose
           username,
           password,
           specialty: doc.specialty,
+          mustChangePassword: true,
           slots: [
-            { time: new Date(Date.now() + 86400000) },
-            { time: new Date(Date.now() + 2 * 86400000) },
+            { time: new Date(Date.now() + 86400000), location: "Gabinet 1" },
+            {
+              time: new Date(Date.now() + 2 * 86400000),
+              location: "Gabinet 1",
+            },
           ],
         });
         console.log(`Lekarz: ${username} hasło: ${plain}`);

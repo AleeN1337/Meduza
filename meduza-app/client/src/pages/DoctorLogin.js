@@ -20,7 +20,11 @@ const DoctorLogin = () => {
       );
       setMsg(`Witaj, ${res.data.doctor.name}!`);
       localStorage.setItem("doctorToken", res.data.token);
-      navigate("/doctor-dashboard");
+      if (res.data.mustChangePassword) {
+        navigate("/doctor-change-password");
+      } else {
+        navigate("/doctor-dashboard");
+      }
     } catch (err) {
       setMsg(err.response?.data?.message || "Błąd logowania");
     }

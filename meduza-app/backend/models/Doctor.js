@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 
 const slotSchema = new mongoose.Schema({
   time: Date,
+  location: String,
   booked: { type: Boolean, default: false },
   confirmed: { type: Boolean, default: false },
   patient: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
@@ -13,6 +14,7 @@ const doctorSchema = new mongoose.Schema({
   email: { type: String },
   pwz: { type: String },
   password: { type: String, required: true },
+  mustChangePassword: { type: Boolean, default: false },
   specialty: { type: String },
   slots: [slotSchema],
 });

@@ -8,6 +8,7 @@ const Navbar = () => {
     !!localStorage.getItem("doctorToken") ||
     !!localStorage.getItem("adminToken");
   const isAdmin = !!localStorage.getItem("adminToken");
+  const isDoctor = !!localStorage.getItem("doctorToken");
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -39,12 +40,29 @@ const Navbar = () => {
               </Link>
             ) : (
               <>
-                <Link to="/calendar" className="text-white font-bold">
-                  Kalendarz
-                </Link>
-                <Link to="/dashboard" className="text-white font-bold">
-                  Panel
-                </Link>
+                {isDoctor ? (
+                  <Link to="/doctor-dashboard" className="text-white font-bold">
+                    Panel
+                  </Link>
+                ) : (
+                  <Link to="/dashboard" className="text-white font-bold">
+                    Panel
+                  </Link>
+                )}
+                {isDoctor ? (
+                  <Link to="/doctor-profile" className="text-white font-bold">
+                    Profil
+                  </Link>
+                ) : (
+                  <Link to="/profile" className="text-white font-bold">
+                    Profil
+                  </Link>
+                )}
+                {!isDoctor && (
+                  <Link to="/calendar" className="text-white font-bold">
+                    Kalendarz
+                  </Link>
+                )}
               </>
             )}
 
@@ -88,19 +106,33 @@ const Navbar = () => {
               </Link>
             ) : (
               <>
-                <Link to="/dashboard" className="text-white font-bold">
-                  Panel
-                </Link>
-                <Link to="/visits" className="text-white font-bold">
-                  Wizyty
-                </Link>
-                <Link
-                  to="/calendar"
-                  className="text-white font-bold"
-                  onClick={() => setMenuOpen(false)}
-                >
-                  Kalendarz
-                </Link>
+                {isDoctor ? (
+                  <Link to="/doctor-dashboard" className="text-white font-bold">
+                    Panel
+                  </Link>
+                ) : (
+                  <Link to="/dashboard" className="text-white font-bold">
+                    Panel
+                  </Link>
+                )}
+                {isDoctor ? (
+                  <Link to="/doctor-profile" className="text-white font-bold">
+                    Profil
+                  </Link>
+                ) : (
+                  <Link to="/profile" className="text-white font-bold">
+                    Profil
+                  </Link>
+                )}
+                {!isDoctor && (
+                  <Link
+                    to="/calendar"
+                    className="text-white font-bold"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    Kalendarz
+                  </Link>
+                )}
                 <Link
                   to="/messages"
                   className="text-white font-bold"

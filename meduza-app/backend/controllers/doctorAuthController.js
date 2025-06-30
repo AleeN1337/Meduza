@@ -22,6 +22,7 @@ const loginDoctor = async (req, res) => {
       message: "Zalogowano pomyślnie.",
       token,
       doctor: { name: doctor.name, username: doctor.username },
+      mustChangePassword: doctor.mustChangePassword,
     });
   } catch (err) {
     res.status(500).json({ message: "Błąd logowania: " + err.message });
@@ -38,6 +39,7 @@ const changePassword = async (req, res) => {
     if (!ok)
       return res.status(401).json({ message: "Nieprawidłowe obecne hasło." });
     doctor.password = await bcrypt.hash(newPassword, 10);
+    doctor.mustChangePassword = false;
     await doctor.save();
     res.json({ message: "Hasło zmienione" });
   } catch (err) {
