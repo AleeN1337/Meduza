@@ -41,6 +41,24 @@ const DoctorDashboard = () => {
       setDoctor(res.data.doctor);
     } catch {}
   };
+
+  const rejectVisit = async (slotId) => {
+    try {
+      await axios.post(
+        `http://localhost:5000/api/doctors/${doctor._id}/reject`,
+        { slotId },
+        { headers: { Authorization: token } }
+      );
+      const res = await axios.get(
+        "http://localhost:5000/api/doctor-dashboard",
+        {
+          headers: { Authorization: token },
+        }
+      );
+      setDoctor(res.data.doctor);
+    } catch {}
+  };
+
   const updateSlot = async (slotId, data) => {
     await axios.put(
       `http://localhost:5000/api/doctors/me/slots/${slotId}`,
@@ -115,6 +133,12 @@ const DoctorDashboard = () => {
                   className="ml-2 bg-primary px-2 py-1 rounded"
                 >
                   Akceptuj
+                </button>
+                <button
+                  onClick={() => rejectVisit(slot._id)}
+                  className="ml-2 bg-red-600 px-2 py-1 rounded"
+                >
+                  Odrzuć
                 </button>
               </li>
             ))}

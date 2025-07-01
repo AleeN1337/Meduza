@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
@@ -9,6 +9,20 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
+  // Poprawiony useCallback, aby fetchAppointments nie powodował ostrzeżenia ESLint
+  const fetchAppointments = useCallback(() => {
+    axios
+      .get("http://localhost:5000/api/doctors/my", {
+        headers: { Authorization: token },
+      })
+      .then((res) => {
+        const fetched = Array.isArray(res.data) ? res.data : [];
+        setAppointments(fetched);
+      })
+      .catch((err) => console.error("Błąd pobierania wizyt:", err));
+  }, [token]);
+
+  // Poprawiony useEffect z kompletną tablicą zależności
   useEffect(() => {
     if (!token) {
       navigate("/login");
@@ -26,19 +40,8 @@ const Dashboard = () => {
       });
 
     fetchAppointments();
-  }, []);
+  }, [token, navigate, fetchAppointments]);
 
-  const fetchAppointments = () => {
-    axios
-      .get("http://localhost:5000/api/doctors/my", {
-        headers: { Authorization: token },
-      })
-      .then((res) => {
-        const fetched = Array.isArray(res.data) ? res.data : [];
-        setAppointments(fetched);
-      })
-      .catch((err) => console.error("Błąd pobierania wizyt:", err));
-  };
   const nextAppointment = appointments
     .slice()
     .sort((a, b) => new Date(a.time) - new Date(b.time))[0];
@@ -60,7 +63,7 @@ const Dashboard = () => {
         </h3>
         {nextAppointment ? (
           <p className="mb-4">
-            {nextAppointment.doctorName} ({nextAppointment.specialty}) -{" "}
+            {nextAppointment.doctorName} ({nextAppointment.specialty}) –{" "}
             {new Date(nextAppointment.time).toLocaleString()}
           </p>
         ) : (
@@ -68,6 +71,17 @@ const Dashboard = () => {
         )}
         <h3 className="text-xl font-semibold mb-2">Status ostatnich wyników</h3>
         <p className="mb-4">Brak nowych wyników badań.</p>
+
+        {user.notifications && user.notifications.length > 0 && (
+          <div className="mb-4">
+            <h3 className="text-xl font-semibold mb-2">Powiadomienia</h3>
+            <ul>
+              {user.notifications.map((n) => (
+                <li key={n._id}>{n.message}</li>
+              ))}
+            </ul>
+          </div>
+        )}
         <div className="flex gap-4">
           <button
             onClick={() => navigate("/calendar")}

@@ -15,7 +15,7 @@ const History = () => (
   <div
     className="min-h-screen flex flex-col items-center bg-cover bg-center pt-[65px] text-white"
     style={{
-      backgroundImage: `url(${process.env.PUBLIC_URL + "/meduza-bg.png"})`,
+      backgroundImage: `url(${process.env.PUBLIC_URL + "/background.png"})`,
     }}
   >
     <Navbar />

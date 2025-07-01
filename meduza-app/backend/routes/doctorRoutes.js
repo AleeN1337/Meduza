@@ -176,7 +176,43 @@ router.post("/:id/confirm", auth, async (req, res) => {
     return res.status(400).json({ message: "Nie można potwierdzić" });
   slot.confirmed = true;
   await doctor.save();
+  const patient = await User.findById(slot.patient);
+  if (patient) {
+    patient.notifications.push({
+      message: `Lekarz ${doctor.name} potwierdził termin wizyty`,
+    });
+    await patient.save();
+  }
   res.json({ message: "Wizyta potwierdzona" });
+
+  // odrzucenie wizyty przez lekarza
+  router.post("/:id/reject", auth, async (req, res) => {
+    const { slotId } = req.body;
+    if (req.user.role !== "doctor" || req.user.id !== req.params.id) {
+      return res.status(403).json({ message: "Brak uprawnień" });
+    }
+    const doctor = await Doctor.findById(req.params.id);
+    if (!doctor)
+      return res.status(404).json({ message: "Nie znaleziono lekarza" });
+    const slot = doctor.slots.id(slotId);
+    if (!slot || !slot.booked)
+      return res.status(400).json({ message: "Nie można odrzucić" });
+    const patientId = slot.patient;
+    slot.booked = false;
+    slot.confirmed = false;
+    slot.patient = null;
+    await doctor.save();
+
+    const patient = await User.findById(patientId);
+    if (patient) {
+      patient.notifications.push({
+        message: `Lekarz ${doctor.name} odrzucił termin wizyty`,
+      });
+      await patient.save();
+    }
+
+    res.json({ message: "Wizyta odrzucona" });
+  });
 });
 
 module.exports = router;

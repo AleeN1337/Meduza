@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Navbar from "../components/Navbar";
 
 const testimonials = [
   {
@@ -43,50 +42,43 @@ const HomePage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (localStorage.getItem("token")) {
+    const token = localStorage.getItem("token");
+    if (token) {
       navigate("/dashboard");
     }
   }, [navigate]);
   return (
     <div className="flex flex-col min-h-screen text-white">
-      <Navbar />
       <header
         className="relative flex flex-col items-center justify-center bg-cover bg-center pt-[65px]"
         style={{
-          backgroundImage: `url(${process.env.PUBLIC_URL + "/meduza-bg.png"})`,
+          backgroundImage: `url(${process.env.PUBLIC_URL + "/background.png"})`,
         }}
       >
-        <div className="w-full text-center backdrop-brightness-50 py-24 px-4">
-          <img
-            src="/Logo_MEDuza.png"
-            alt="MEDuza logo"
-            className="h-40 w-auto mx-auto mb-6 drop-shadow-xl"
-          />
-          <p className="text-xl max-w-2xl mx-auto mb-8">
-            Nowoczesny system zarządzania wizytami medycznymi
-          </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <Link
-              to="/login"
-              className="bg-primary hover:bg-primary-light px-6 py-3 rounded-lg font-bold"
-            >
-              Logowanie pacjenta
-            </Link>
-            <Link
-              to="/doctor-login"
-              className="bg-primary hover:bg-primary-light px-6 py-3 rounded-lg font-bold"
-            >
-              Logowanie lekarza
-            </Link>
-            <Link
-              to="/admin"
-              className="bg-primary hover:bg-primary-light px-6 py-3 rounded-lg font-bold  "
-            >
-              Logowanie admina
-            </Link>
-          </div>
+        <div className="w-full text-center backdrop-brightness-53 py-24 px-4">
+          <img className="h-40 w-auto mx-auto mb-6 drop-shadow-xl" alt="" />
         </div>
       </header>
+      <div className="flex justify-center items-center h-1/6  gap-10 m-7">
+        <Link
+          to="/login"
+          className="bg-primary hover:bg-primary-light px-6 py-3 rounded-lg font-bold"
+        >
+          Logowanie pacjenta
+        </Link>
+        <Link
+          to="/doctor-login"
+          className="bg-primary hover:bg-primary-light px-6 py-3 rounded-lg font-bold"
+        >
+          Logowanie lekarza
+        </Link>
+        <Link
+          to="/admin"
+          className="bg-primary hover:bg-primary-light px-6 py-3 rounded-lg font-bold  "
+        >
+          Logowanie admina
+        </Link>
+      </div>
 
       <section className="py-16 bg-white text-black">
         <div className="max-w-5xl mx-auto px-4">
