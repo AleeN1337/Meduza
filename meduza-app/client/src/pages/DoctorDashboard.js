@@ -11,6 +11,7 @@ import {
 } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { DateTimePicker } from "../components/ui/datetime-picker";
+import Sidebar from "../components/Sidebar";
 
 const DoctorDashboard = () => {
   const [doctor, setDoctor] = useState(null);
@@ -116,111 +117,114 @@ const DoctorDashboard = () => {
 
   return (
     <div
-      className="min-h-screen flex flex-col items-center bg-cover bg-center pt-[65px] text-white"
+      className="min-h-screen bg-cover bg-center text-white"
       style={{
         backgroundImage: `url(${process.env.PUBLIC_URL + "/meduza-bg.png"})`,
       }}
     >
       <Navbar />
-      <Card className="bg-black/70 text-white w-full max-w-4xl">
-        <CardHeader>
-          <CardTitle>Witaj dr {doctor.name}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <h3 className="text-xl font-semibold mb-2">Oczekujące wizyty</h3>
-          <ul className="mb-4">
-            {doctor.slots
-              .filter((s) => s.booked && !s.confirmed)
-              .map((slot) => (
-                <li
-                  key={slot._id}
-                  className="mb-2 flex justify-between items-center"
-                >
-                  <span>
+      <Sidebar isDoctor />
+      <div className="ml-40 pt-[65px] flex flex-col items-center">
+        <Card className="bg-black/70 text-white w-full max-w-4xl mt-4">
+          <CardHeader>
+            <CardTitle>Witaj dr {doctor.name}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <h3 className="text-xl font-semibold mb-2">Oczekujące wizyty</h3>
+            <ul className="mb-4">
+              {doctor.slots
+                .filter((s) => s.booked && !s.confirmed)
+                .map((slot) => (
+                  <li
+                    key={slot._id}
+                    className="mb-2 flex justify-between items-center"
+                  >
+                    <span>
+                      {new Date(slot.time).toLocaleString()} -{" "}
+                      {slot.patient?.firstName} {slot.patient?.lastName}
+                    </span>
+                    <Button
+                      onClick={() => confirmVisit(slot._id)}
+                      className="ml-2"
+                    >
+                      Akceptuj
+                    </Button>
+                    <Button
+                      onClick={() => rejectVisit(slot._id)}
+                      variant="outline"
+                      className="ml-2 bg-red-600 text-white border-none"
+                    >
+                      Odrzuć
+                    </Button>
+                  </li>
+                ))}
+            </ul>
+            <h3 className="text-xl font-semibold mb-2">Wolne terminy</h3>
+            <ul className="mb-4">
+              {doctor.slots
+                .filter((s) => !s.booked)
+                .map((slot) => (
+                  <li key={slot._id} className="mb-2 flex gap-2 items-center">
+                    <span>
+                      {new Date(slot.time).toLocaleString()} - {slot.location}
+                    </span>
+                    <Button
+                      onClick={() =>
+                        updateSlot(slot._id, {
+                          time: prompt("Nowy czas", slot.time),
+                          location: prompt("Miejsce", slot.location),
+                        })
+                      }
+                      className="bg-blue-600 text-white"
+                    >
+                      Edytuj
+                    </Button>
+                    <Button
+                      onClick={() => deleteSlot(slot._id)}
+                      variant="outline"
+                      className="bg-red-600 text-white border-none"
+                    >
+                      Usuń
+                    </Button>
+                  </li>
+                ))}
+            </ul>
+            <h3 className="text-xl font-semibold mb-2">Potwierdzone wizyty</h3>
+            <ul>
+              {doctor.slots
+                .filter((s) => s.booked && s.confirmed)
+                .map((slot) => (
+                  <li key={slot._id} className="mb-2">
                     {new Date(slot.time).toLocaleString()} -{" "}
                     {slot.patient?.firstName} {slot.patient?.lastName}
-                  </span>
-                  <Button
-                    onClick={() => confirmVisit(slot._id)}
-                    className="ml-2"
-                  >
-                    Akceptuj
-                  </Button>
-                  <Button
-                    onClick={() => rejectVisit(slot._id)}
-                    variant="outline"
-                    className="ml-2 bg-red-600 text-white border-none"
-                  >
-                    Odrzuć
-                  </Button>
-                </li>
-              ))}
-          </ul>
-          <h3 className="text-xl font-semibold mb-2">Wolne terminy</h3>
-          <ul className="mb-4">
-            {doctor.slots
-              .filter((s) => !s.booked)
-              .map((slot) => (
-                <li key={slot._id} className="mb-2 flex gap-2 items-center">
-                  <span>
-                    {new Date(slot.time).toLocaleString()} - {slot.location}
-                  </span>
-                  <Button
-                    onClick={() =>
-                      updateSlot(slot._id, {
-                        time: prompt("Nowy czas", slot.time),
-                        location: prompt("Miejsce", slot.location),
-                      })
-                    }
-                    className="bg-blue-600 text-white"
-                  >
-                    Edytuj
-                  </Button>
-                  <Button
-                    onClick={() => deleteSlot(slot._id)}
-                    variant="outline"
-                    className="bg-red-600 text-white border-none"
-                  >
-                    Usuń
-                  </Button>
-                </li>
-              ))}
-          </ul>
-          <h3 className="text-xl font-semibold mb-2">Potwierdzone wizyty</h3>
-          <ul>
-            {doctor.slots
-              .filter((s) => s.booked && s.confirmed)
-              .map((slot) => (
-                <li key={slot._id} className="mb-2">
-                  {new Date(slot.time).toLocaleString()} -{" "}
-                  {slot.patient?.firstName} {slot.patient?.lastName}
-                </li>
-              ))}
-          </ul>
-          <h3 className="text-xl font-semibold mt-4 mb-2">Dodaj termin</h3>
-          <form onSubmit={addSlot} className="flex flex-col gap-2 text-black">
-            <DateTimePicker name="time" required className="p-2 rounded" />
-            <input
-              type="text"
-              name="location"
-              placeholder="Miejsce"
-              className="p-2 rounded"
-            />
-            <Button type="submit">Dodaj</Button>
-          </form>
-          {doctor.notifications.length > 0 && (
-            <div className="mt-4">
-              <h3 className="text-xl font-semibold mb-2">Powiadomienia</h3>
-              <ul>
-                {doctor.notifications.map((n) => (
-                  <li key={n._id}>{n.message}</li>
+                  </li>
                 ))}
-              </ul>
-            </div>
-          )}
-        </CardContent>
-        <CardFooter />
-      </Card>
+            </ul>
+            <h3 className="text-xl font-semibold mt-4 mb-2">Dodaj termin</h3>
+            <form onSubmit={addSlot} className="flex flex-col gap-2 text-black">
+              <DateTimePicker name="time" required className="p-2 rounded" />
+              <input
+                type="text"
+                name="location"
+                placeholder="Miejsce"
+                className="p-2 rounded"
+              />
+              <Button type="submit">Dodaj</Button>
+            </form>
+            {doctor.notifications.length > 0 && (
+              <div className="mt-4">
+                <h3 className="text-xl font-semibold mb-2">Powiadomienia</h3>
+                <ul>
+                  {doctor.notifications.map((n) => (
+                    <li key={n._id}>{n.message}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </CardContent>
+          <CardFooter />
+        </Card>
+      </div>
     </div>
   );
 };
