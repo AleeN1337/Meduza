@@ -10,6 +10,7 @@ import {
   CardFooter,
 } from "../components/ui/card";
 import { Button } from "../components/ui/button";
+import { DateTimePicker } from "../components/ui/datetime-picker";
 
 const DoctorDashboard = () => {
   const [doctor, setDoctor] = useState(null);
@@ -198,12 +199,7 @@ const DoctorDashboard = () => {
           </ul>
           <h3 className="text-xl font-semibold mt-4 mb-2">Dodaj termin</h3>
           <form onSubmit={addSlot} className="flex flex-col gap-2 text-black">
-            <input
-              type="datetime-local"
-              name="time"
-              required
-              className="p-2 rounded"
-            />
+            <DateTimePicker name="time" required className="p-2 rounded" />
             <input
               type="text"
               name="location"

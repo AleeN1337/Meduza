@@ -2,9 +2,19 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import Dialog from "../components/ui/dialog";
+import { Button } from "../components/ui/button";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardFooter,
+} from "../components/ui/card";
 
 const Visits = () => {
   const [appointments, setAppointments] = useState([]);
+  const [cancelInfo, setCancelInfo] = useState(null);
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
@@ -28,7 +38,7 @@ const Visits = () => {
       .catch((err) => console.error("Błąd pobierania wizyt:", err));
   };
 
-  const handleCancel = (doctorId, slotId) => {
+  const cancelVisit = (doctorId, slotId) => {
     axios
       .post(
         `http://localhost:5000/api/doctors/${doctorId}/cancel`,
@@ -47,40 +57,70 @@ const Visits = () => {
       }}
     >
       <Navbar />
-      <div className="bg-black/70 p-6 rounded-xl shadow-lg w-full max-w-4xl">
-        <h2 className="text-2xl font-bold mb-4">Moje wizyty</h2>
-        <ul className="mb-6 space-y-2">
-          {appointments.length ? (
-            appointments.map((ap) => (
-              <li key={ap.slotId} className="flex items-center justify-between">
-                <span>
-                  {ap.doctorName} ({ap.specialty}) -{" "}
-                  {new Date(ap.time).toLocaleString()}
-                </span>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => handleCancel(ap.doctorId, ap.slotId)}
-                    className="bg-red-600 px-2 py-1 rounded"
-                  >
-                    Anuluj
-                  </button>
-                  <button
-                    onClick={() => navigate("/calendar")}
-                    className="bg-blue-600 px-2 py-1 rounded"
-                  >
-                    Przełóż
-                  </button>
-                  <button className="bg-green-600 px-2 py-1 rounded">
-                    PDF
-                  </button>
-                </div>
-              </li>
-            ))
-          ) : (
-            <p>Brak wizyt.</p>
-          )}
-        </ul>
-      </div>
+      <Card className="bg-black/70 text-white w-full max-w-4xl">
+        <CardHeader>
+          <CardTitle>Moje wizyty</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ul className="mb-6 space-y-2">
+            {appointments.length ? (
+              appointments.map((ap) => (
+                <li
+                  key={ap.slotId}
+                  className="flex items-center justify-between"
+                >
+                  <span>
+                    {ap.doctorName} ({ap.specialty}) -{" "}
+                    {new Date(ap.time).toLocaleString()}
+                  </span>
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={() =>
+                        setCancelInfo({
+                          doctorId: ap.doctorId,
+                          slotId: ap.slotId,
+                        })
+                      }
+                      className="bg-red-600 text-white"
+                    >
+                      Anuluj
+                    </Button>
+                    <Button onClick={() => navigate("/calendar")}>
+                      Przełóż
+                    </Button>
+                    <Button className="bg-green-600 text-white">PDF</Button>
+                  </div>
+                </li>
+              ))
+            ) : (
+              <p>Brak wizyt.</p>
+            )}
+          </ul>
+        </CardContent>
+        <CardFooter />
+      </Card>
+      {cancelInfo && (
+        <Dialog
+          open={!!cancelInfo}
+          onClose={() => setCancelInfo(null)}
+          title="Potwierdzenie"
+        >
+          <p>Czy na pewno chcesz anulować wizytę?</p>
+          <div className="mt-4 flex gap-2 justify-end">
+            <Button
+              onClick={() => {
+                cancelVisit(cancelInfo.doctorId, cancelInfo.slotId);
+                setCancelInfo(null);
+              }}
+            >
+              Tak
+            </Button>
+            <Button variant="outline" onClick={() => setCancelInfo(null)}>
+              Nie
+            </Button>
+          </div>
+        </Dialog>
+      )}
     </div>
   );
 };
