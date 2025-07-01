@@ -34,6 +34,14 @@ const Admin = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    if (
+      localStorage.getItem("token") ||
+      localStorage.getItem("doctorToken") ||
+      localStorage.getItem("adminToken")
+    ) {
+      setMsg("Najpierw wyloguj się z bieżącego konta");
+      return;
+    }
     try {
       const res = await axios.post(
         "http://localhost:5000/api/auth/login",
