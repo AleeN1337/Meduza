@@ -2,6 +2,14 @@ import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardFooter,
+} from "../components/ui/card";
+import { Button } from "../components/ui/button";
 
 const Dashboard = () => {
   const [user, setUser] = useState(null);
@@ -56,53 +64,44 @@ const Dashboard = () => {
       }}
     >
       <Navbar />
-      <div className="bg-black/70 p-6 rounded-xl shadow-lg w-full max-w-4xl">
-        <h2 className="text-2xl font-bold mb-4">Witaj {user.firstName}</h2>
-        <h3 className="text-xl font-semibold mb-2">
-          Najbliższa zaplanowana wizyta
-        </h3>
-        {nextAppointment ? (
-          <p className="mb-4">
-            {nextAppointment.doctorName} ({nextAppointment.specialty}) –{" "}
-            {new Date(nextAppointment.time).toLocaleString()}
-          </p>
-        ) : (
-          <p className="mb-4">Brak zaplanowanych wizyt.</p>
-        )}
-        <h3 className="text-xl font-semibold mb-2">Status ostatnich wyników</h3>
-        <p className="mb-4">Brak nowych wyników badań.</p>
+      <Card className="bg-black/70 text-white w-full max-w-4xl">
+        <CardHeader>
+          <CardTitle>Witaj {user.firstName}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <h3 className="text-xl font-semibold mb-2">
+            Najbliższa zaplanowana wizyta
+          </h3>
+          {nextAppointment ? (
+            <p className="mb-4">
+              {nextAppointment.doctorName} ({nextAppointment.specialty}) –{" "}
+              {new Date(nextAppointment.time).toLocaleString()}
+            </p>
+          ) : (
+            <p className="mb-4">Brak zaplanowanych wizyt.</p>
+          )}
+          <h3 className="text-xl font-semibold mb-2">
+            Status ostatnich wyników
+          </h3>
+          <p className="mb-4">Brak nowych wyników badań.</p>
 
-        {user.notifications && user.notifications.length > 0 && (
-          <div className="mb-4">
-            <h3 className="text-xl font-semibold mb-2">Powiadomienia</h3>
-            <ul>
-              {user.notifications.map((n) => (
-                <li key={n._id}>{n.message}</li>
-              ))}
-            </ul>
-          </div>
-        )}
-        <div className="flex gap-4">
-          <button
-            onClick={() => navigate("/calendar")}
-            className="bg-primary px-4 py-2 rounded"
-          >
-            Umów wizytę
-          </button>
-          <button
-            onClick={() => navigate("/visits")}
-            className="bg-primary px-4 py-2 rounded"
-          >
-            Historia wizyt
-          </button>
-          <button
-            onClick={() => navigate("/messages")}
-            className="bg-primary px-4 py-2 rounded"
-          >
-            Wiadomości
-          </button>
-        </div>
-      </div>
+          {user.notifications && user.notifications.length > 0 && (
+            <div className="mb-4">
+              <h3 className="text-xl font-semibold mb-2">Powiadomienia</h3>
+              <ul>
+                {user.notifications.map((n) => (
+                  <li key={n._id}>{n.message}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </CardContent>
+        <CardFooter className="flex gap-4">
+          <Button onClick={() => navigate("/calendar")}>Umów wizytę</Button>
+          <Button onClick={() => navigate("/visits")}>Historia wizyt</Button>
+          <Button onClick={() => navigate("/messages")}>Wiadomości</Button>
+        </CardFooter>
+      </Card>
     </div>
   );
 };
