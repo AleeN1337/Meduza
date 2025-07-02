@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { Button } from "../components/ui/button";
 import { DateTimePicker } from "../components/ui/datetime-picker";
+import Sidebar from "../components/Sidebar";
 
 const Calendar = () => {
   const [doctors, setDoctors] = useState([]);
@@ -44,12 +45,14 @@ const Calendar = () => {
 
   return (
     <div
-      className="min-h-screen flex flex-col items-center bg-cover bg-center pt-[65px] text-black"
+      className="min-h-screen bg-cover bg-center text-black"
       style={{
         backgroundImage: `url(${process.env.PUBLIC_URL + "/meduza-bg.png"})`,
       }}
     >
       <Navbar />
+      <Sidebar />
+      <div className="ml-40 pt-[65px] flex flex-col items-center"></div>
       <div className="bg-black/70 p-6 rounded-xl shadow-lg w-full max-w-4xl">
         <h2 className="text-2xl font-bold mb-4">Wybierz termin wizyty</h2>
         <div className="flex items-center gap-2 mb-4">

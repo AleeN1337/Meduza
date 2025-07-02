@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Navbar from "../components/Navbar";
+import Sidebar from "../components/Sidebar";
 
 const Messages = () => {
   const [messages, setMessages] = useState([
@@ -16,12 +17,14 @@ const Messages = () => {
 
   return (
     <div
-      className="min-h-screen flex flex-col items-center bg-cover bg-center pt-[65px] text-white"
+      className="min-h-screen bg-cover bg-center text-white"
       style={{
         backgroundImage: `url(${process.env.PUBLIC_URL + "/meduza-bg.png"})`,
       }}
     >
       <Navbar />
+      <Sidebar />
+      <div className="ml-40 pt-[65px] flex flex-col items-center"></div>
       <div className="bg-black/70 p-6 rounded-xl shadow-lg w-full max-w-3xl flex flex-col h-[70vh]">
         <h2 className="text-2xl font-bold mb-4">Wiadomości</h2>
         <div className="flex-1 overflow-y-auto mb-4 space-y-2">

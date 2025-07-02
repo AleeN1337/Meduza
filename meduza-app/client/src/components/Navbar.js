@@ -7,167 +7,57 @@ const Navbar = () => {
     !!localStorage.getItem("token") ||
     !!localStorage.getItem("doctorToken") ||
     !!localStorage.getItem("adminToken");
-  const isAdmin = !!localStorage.getItem("adminToken");
-  const isDoctor = !!localStorage.getItem("doctorToken");
+
   const navigate = useNavigate();
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("doctorToken");
     localStorage.removeItem("adminToken");
-    setMenuOpen(false);
     navigate("/");
   };
 
   return (
     <div className="fixed top-0 left-0 flex items-center justify-between px-6 py-3 bg-black/60 text-white h-[65px] z-10 w-full">
       <div className="flex-shrink-0">
-        <Link to="/">
-          <img
-            src="/Logo_MEDuza.png"
-            alt="MEDuza logo"
-            className="h-12 cursor-pointer transition-transform hover:scale-110"
-          />
-        </Link>
-      </div>
-
-      <nav className="hidden md:flex gap-6 ml-auto">
         {isLoggedIn ? (
-          <>
-            {isAdmin ? (
-              <Link to="/admin" className="text-white font-bold">
-                Panel admina
-              </Link>
-            ) : (
-              <>
-                {isDoctor ? (
-                  <Link to="/doctor-dashboard" className="text-white font-bold">
-                    Panel
-                  </Link>
-                ) : (
-                  <Link to="/dashboard" className="text-white font-bold">
-                    Panel
-                  </Link>
-                )}
-                {isDoctor ? (
-                  <Link to="/doctor-profile" className="text-white font-bold">
-                    Profil
-                  </Link>
-                ) : (
-                  <Link to="/profile" className="text-white font-bold">
-                    Profil
-                  </Link>
-                )}
-                {!isDoctor && (
-                  <Link to="/calendar" className="text-white font-bold">
-                    Kalendarz
-                  </Link>
-                )}
-              </>
-            )}
-
-            <button onClick={handleLogout} className="text-white font-bold">
-              Wyloguj
-            </button>
-          </>
+          <button
+            onClick={handleLogout}
+            className="bg-red-600 hover:bg-red-700 text-white font-bold px-3 py-1 rounded"
+          >
+            Wyloguj
+          </button>
         ) : (
-          <>
+          <Link to="/">
+            <img
+              src="/Logo_MEDuza.png"
+              alt="MEDuza logo"
+              className="h-12 cursor-pointer transition-transform hover:scale-110"
+            />
+          </Link>
+        )}
+      </div>
+      {!isLoggedIn && (
+        <>
+          <nav className="hidden md:flex gap-6 ml-auto">
             <Link to="/register" className="text-white font-bold">
               Rejestracja
             </Link>
             <Link to="/login" className="text-white font-bold">
               Logowanie
             </Link>
-          </>
-        )}
-      </nav>
-
-      <button
-        className="text-2xl ml-auto md:hidden focus:outline-none"
-        onClick={() => setMenuOpen(!menuOpen)}
-      >
-        ☰
-      </button>
-
-      <div
-        className={`md:hidden fixed top-[65px] right-0 w-40 bg-black/80 p-4 flex flex-col gap-4 transition-transform z-50 ${
-          menuOpen ? "translate-x-0" : "translate-x-full"
-        }`}
-      >
-        {isLoggedIn ? (
-          <>
-            {isAdmin ? (
-              <Link
-                to="/admin"
-                className="text-white font-bold"
-                onClick={() => setMenuOpen(false)}
-              >
-                Panel admina
-              </Link>
-            ) : (
-              <>
-                {isDoctor ? (
-                  <Link to="/doctor-dashboard" className="text-white font-bold">
-                    Panel
-                  </Link>
-                ) : (
-                  <Link to="/dashboard" className="text-white font-bold">
-                    Panel
-                  </Link>
-                )}
-                {isDoctor ? (
-                  <Link to="/doctor-profile" className="text-white font-bold">
-                    Profil
-                  </Link>
-                ) : (
-                  <Link to="/profile" className="text-white font-bold">
-                    Profil
-                  </Link>
-                )}
-                {!isDoctor && (
-                  <Link
-                    to="/calendar"
-                    className="text-white font-bold"
-                    onClick={() => setMenuOpen(false)}
-                  >
-                    Kalendarz
-                  </Link>
-                )}
-                <Link
-                  to="/messages"
-                  className="text-white font-bold"
-                  onClick={() => setMenuOpen(false)}
-                >
-                  Wiadomości
-                </Link>
-              </>
-            )}
-            <button
-              onClick={handleLogout}
-              className="text-white font-bold text-left"
-            >
-              <Link to="/messages" className="text-white font-bold">
-                Wiadomości
-              </Link>
-              Wyloguj
-            </button>
-          </>
-        ) : (
-          <>
-            <Link
-              to="/dashboard"
-              className="text-white font-bold"
-              onClick={() => setMenuOpen(false)}
-            >
-              Panel
-            </Link>
-            <Link
-              to="/visits"
-              className="text-white font-bold"
-              onClick={() => setMenuOpen(false)}
-            >
-              Wizyty
-            </Link>
+          </nav>
+          <button
+            className="text-2xl ml-auto md:hidden focus:outline-none"
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            ☰
+          </button>
+          <div
+            className={`md:hidden fixed top-[65px] right-0 w-40 bg-black/80 p-4 flex flex-col gap-4 transition-transform z-50 ${
+              menuOpen ? "translate-x-0" : "translate-x-full"
+            }`}
+          >
             <Link
               to="/register"
               className="text-white font-bold"
@@ -182,9 +72,9 @@ const Navbar = () => {
             >
               Logowanie
             </Link>
-          </>
-        )}
-      </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };

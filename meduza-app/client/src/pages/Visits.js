@@ -11,6 +11,7 @@ import {
   CardContent,
   CardFooter,
 } from "../components/ui/card";
+import Sidebar from "../components/Sidebar";
 
 const Visits = () => {
   const [appointments, setAppointments] = useState([]);
@@ -51,12 +52,14 @@ const Visits = () => {
 
   return (
     <div
-      className="min-h-screen flex flex-col items-center bg-cover bg-center pt-[65px] text-white"
+      className="min-h-screen bg-cover bg-center text-white"
       style={{
         backgroundImage: `url(${process.env.PUBLIC_URL + "/meduza-bg.png"})`,
       }}
     >
       <Navbar />
+      <Sidebar />
+      <div className="ml-40 pt-[65px] flex flex-col items-center"></div>
       <Card className="bg-black/70 text-white w-full max-w-4xl">
         <CardHeader>
           <CardTitle>Moje wizyty</CardTitle>

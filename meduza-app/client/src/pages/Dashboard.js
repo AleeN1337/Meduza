@@ -100,8 +100,6 @@ const Dashboard = () => {
             )}
           </CardContent>
           <CardFooter className="flex gap-4">
-            <Button onClick={() => navigate("/calendar")}>Umów wizytę</Button>
-            <Button onClick={() => navigate("/visits")}>Historia wizyt</Button>
             <Button onClick={() => navigate("/messages")}>Wiadomości</Button>
           </CardFooter>
         </Card>
