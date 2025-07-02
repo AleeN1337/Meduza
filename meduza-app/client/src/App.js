@@ -13,6 +13,8 @@ import Prescriptions from "./pages/Prescriptions";
 import Messages from "./pages/Messages";
 import Admin from "./pages/Admin";
 import PatientProfile from "./pages/PatientProfile";
+import "react-day-picker/dist/style.css";
+
 import DoctorProfile from "./pages/DoctorProfile";
 
 function App() {

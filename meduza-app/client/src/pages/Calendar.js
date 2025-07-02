@@ -10,6 +10,7 @@ const Calendar = () => {
   const [doctors, setDoctors] = useState([]);
   const navigate = useNavigate();
   const [filterDate, setFilterDate] = useState("");
+
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -17,20 +18,21 @@ const Calendar = () => {
       navigate("/login");
       return;
     }
-    fetchDoctors();
-  }, []);
 
-  const fetchDoctors = () => {
-    axios
-      .get("http://localhost:5000/api/doctors", {
-        headers: { Authorization: token },
-      })
-      .then((res) => {
-        const fetched = Array.isArray(res.data) ? res.data : [];
-        setDoctors(fetched);
-      })
-      .catch((err) => console.error("Błąd pobierania lekarzy:", err));
-  };
+    const fetchDoctors = () => {
+      axios
+        .get("http://localhost:5000/api/doctors", {
+          headers: { Authorization: token },
+        })
+        .then((res) => {
+          const fetched = Array.isArray(res.data) ? res.data : [];
+          setDoctors(fetched);
+        })
+        .catch((err) => console.error("Błąd pobierania lekarzy:", err));
+    };
+
+    fetchDoctors();
+  }, [navigate, token]);
 
   const handleBook = (doctorId, slotId) => {
     axios
@@ -39,7 +41,17 @@ const Calendar = () => {
         { slotId },
         { headers: { Authorization: token } }
       )
-      .then(fetchDoctors)
+      .then(() => {
+        // Ponowne pobranie danych po rezerwacji
+        axios
+          .get("http://localhost:5000/api/doctors", {
+            headers: { Authorization: token },
+          })
+          .then((res) => {
+            const fetched = Array.isArray(res.data) ? res.data : [];
+            setDoctors(fetched);
+          });
+      })
       .catch((err) => console.error("Błąd rezerwacji:", err));
   };
 
