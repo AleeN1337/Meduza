@@ -24,28 +24,29 @@ const Messages = () => {
     >
       <Navbar />
       <Sidebar />
-      <div className="ml-40 pt-[65px] flex flex-col items-center"></div>
-      <div className="bg-black/70 p-6 rounded-xl shadow-lg w-full max-w-3xl flex flex-col h-[70vh]">
-        <h2 className="text-2xl font-bold mb-4">Wiadomości</h2>
-        <div className="flex-1 overflow-y-auto mb-4 space-y-2">
-          {messages.map((m) => (
-            <div key={m.id} className="bg-white/10 p-2 rounded">
-              <span className="font-semibold mr-2">{m.from}:</span>
-              {m.text}
-            </div>
-          ))}
+      <div className="ml-40 pt-[65px] flex flex-col items-center">
+        <div className="bg-black/70 p-6 rounded-xl shadow-lg w-full max-w-3xl flex flex-col h-[70vh]">
+          <h2 className="text-2xl font-bold mb-4">Wiadomości</h2>
+          <div className="flex-1 overflow-y-auto mb-4 space-y-2">
+            {messages.map((m) => (
+              <div key={m.id} className="bg-white/10 p-2 rounded">
+                <span className="font-semibold mr-2">{m.from}:</span>
+                {m.text}
+              </div>
+            ))}
+          </div>
+          <form onSubmit={handleSend} className="flex gap-2">
+            <input
+              className="flex-1 p-2 rounded text-black"
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              placeholder="Napisz wiadomość..."
+            />
+            <button type="submit" className="bg-primary px-4 rounded">
+              Wyślij
+            </button>
+          </form>
         </div>
-        <form onSubmit={handleSend} className="flex gap-2">
-          <input
-            className="flex-1 p-2 rounded text-black"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            placeholder="Napisz wiadomość..."
-          />
-          <button type="submit" className="bg-primary px-4 rounded">
-            Wyślij
-          </button>
-        </form>
       </div>
     </div>
   );

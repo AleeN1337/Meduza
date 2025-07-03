@@ -64,57 +64,57 @@ const Calendar = () => {
     >
       <Navbar />
       <Sidebar />
-      <div className="ml-40 pt-[65px] flex flex-col items-center"></div>
-      <div className="bg-black/70 p-6 rounded-xl shadow-lg w-full max-w-4xl">
-        <h2 className="text-2xl font-bold mb-4">Wybierz termin wizyty</h2>
-        <div className="flex items-center gap-2 mb-4">
-          <DateTimePicker
-            value={filterDate}
-            onChange={(e) => setFilterDate(e.target.value)}
-            className="text-black"
-          />
-          <Button variant="outline" onClick={() => setFilterDate("")}>
-            Wyczyść
-          </Button>
-        </div>
-        {doctors.map((doc) => (
-          <div key={doc._id} className="mb-5">
-            <h4 className="font-semibold">
-              {doc.specialty} {doc.name}
-            </h4>
-            <div className="flex flex-wrap gap-1.5">
-              {Array.isArray(doc.slots) &&
-                doc.slots
-                  .filter((slot) => {
-                    if (!filterDate) return true;
-                    return (
-                      new Date(slot.time).toDateString() ===
-                      new Date(filterDate).toDateString()
-                    );
-                  })
-                  .map((slot) => (
-                    <div
-                      key={slot._id}
-                      className={`p-2 rounded text-sm ${
-                        slot.booked ? "bg-red-100" : "bg-green-100"
-                      }`}
-                    >
-                      {new Date(slot.time).toLocaleString()}
-                      {!slot.booked ? (
-                        <Button
-                          onClick={() => handleBook(doc._id, slot._id)}
-                          className="ml-2"
-                        >
-                          Rezerwuj
-                        </Button>
-                      ) : (
-                        <span className="ml-2 text-gray-300">Zajęte</span>
-                      )}
-                    </div>
-                  ))}
-            </div>
+      <div className="ml-40 pt-[65px] flex flex-col items-center">
+        <div className="bg-black/70 p-6 rounded-xl shadow-lg w-full max-w-4xl">
+          <h2 className="text-2xl font-bold mb-4">Wybierz termin wizyty</h2>
+          <div className="flex items-center gap-2 mb-4">
+            <DateTimePicker
+              value={filterDate}
+              onChange={(e) => setFilterDate(e.target.value)}
+            />
+            <Button variant="outline" onClick={() => setFilterDate("")}>
+              Wyczyść
+            </Button>
           </div>
-        ))}
+          {doctors.map((doc) => (
+            <div key={doc._id} className="mb-5">
+              <h4 className="font-semibold">
+                {doc.specialty} {doc.name}
+              </h4>
+              <div className="flex flex-wrap gap-1.5">
+                {Array.isArray(doc.slots) &&
+                  doc.slots
+                    .filter((slot) => {
+                      if (!filterDate) return true;
+                      return (
+                        new Date(slot.time).toDateString() ===
+                        new Date(filterDate).toDateString()
+                      );
+                    })
+                    .map((slot) => (
+                      <div
+                        key={slot._id}
+                        className={`p-2 rounded text-sm ${
+                          slot.booked ? "bg-red-100" : "bg-green-100"
+                        }`}
+                      >
+                        {new Date(slot.time).toLocaleString()}
+                        {!slot.booked ? (
+                          <Button
+                            onClick={() => handleBook(doc._id, slot._id)}
+                            className="ml-2"
+                          >
+                            Rezerwuj
+                          </Button>
+                        ) : (
+                          <span className="ml-2 text-gray-300">Zajęte</span>
+                        )}
+                      </div>
+                    ))}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

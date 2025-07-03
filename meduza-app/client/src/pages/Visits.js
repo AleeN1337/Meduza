@@ -59,49 +59,50 @@ const Visits = () => {
     >
       <Navbar />
       <Sidebar />
-      <div className="ml-40 pt-[65px] flex flex-col items-center"></div>
-      <Card className="bg-black/70 text-white w-full max-w-4xl">
-        <CardHeader>
-          <CardTitle>Moje wizyty</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ul className="mb-6 space-y-2">
-            {appointments.length ? (
-              appointments.map((ap) => (
-                <li
-                  key={ap.slotId}
-                  className="flex items-center justify-between"
-                >
-                  <span>
-                    {ap.doctorName} ({ap.specialty}) -{" "}
-                    {new Date(ap.time).toLocaleString()}
-                  </span>
-                  <div className="flex gap-2">
-                    <Button
-                      onClick={() =>
-                        setCancelInfo({
-                          doctorId: ap.doctorId,
-                          slotId: ap.slotId,
-                        })
-                      }
-                      className="bg-red-600 text-white"
-                    >
-                      Anuluj
-                    </Button>
-                    <Button onClick={() => navigate("/calendar")}>
-                      Przełóż
-                    </Button>
-                    <Button className="bg-green-600 text-white">PDF</Button>
-                  </div>
-                </li>
-              ))
-            ) : (
-              <p>Brak wizyt.</p>
-            )}
-          </ul>
-        </CardContent>
-        <CardFooter />
-      </Card>
+      <div className="ml-40 pt-[65px] flex flex-col items-center">
+        <Card className="bg-black/70 text-white w-full max-w-4xl">
+          <CardHeader>
+            <CardTitle>Moje wizyty</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ul className="mb-6 space-y-2">
+              {appointments.length ? (
+                appointments.map((ap) => (
+                  <li
+                    key={ap.slotId}
+                    className="flex items-center justify-between"
+                  >
+                    <span>
+                      {ap.doctorName} ({ap.specialty}) -{" "}
+                      {new Date(ap.time).toLocaleString()}
+                    </span>
+                    <div className="flex gap-2">
+                      <Button
+                        onClick={() =>
+                          setCancelInfo({
+                            doctorId: ap.doctorId,
+                            slotId: ap.slotId,
+                          })
+                        }
+                        className="bg-red-600 text-white"
+                      >
+                        Anuluj
+                      </Button>
+                      <Button onClick={() => navigate("/calendar")}>
+                        Przełóż
+                      </Button>
+                      <Button className="bg-green-600 text-white">PDF</Button>
+                    </div>
+                  </li>
+                ))
+              ) : (
+                <p>Brak wizyt.</p>
+              )}
+            </ul>
+          </CardContent>
+          <CardFooter />
+        </Card>
+      </div>
       {cancelInfo && (
         <Dialog
           open={!!cancelInfo}
