@@ -14,6 +14,7 @@ const userSchema = new mongoose.Schema({
   country: { type: String },
   city: { type: String },
   role: { type: String, default: "patient" },
+  avatarUrl: { type: String },
   notifications: [notificationSchema],
 });
 
